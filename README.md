@@ -13,6 +13,7 @@ Catalog with sizes and colors, orders and reservations that arrive on WhatsApp, 
 <img src="docs/screenshots/product-en.png" width="23%" alt="Product page">
 <img src="docs/screenshots/cart-ar.png" width="23%" alt="Checkout in Arabic, right to left">
 </p>
+<p align="center"><img src="docs/screenshots/home-desktop-en.png" width="90%" alt="Home on desktop"></p>
 
 ## The pitch
 
@@ -48,6 +49,8 @@ docs/                 the site (served by GitHub Pages)
   js/i18n.js          interface strings, Arabic and English
 tests/                unit tests + browser click-through
 ```
+
+The browser click-through (67 checks: filters, bag, stock limits, WhatsApp links in both languages, reservation flow, RTL, accessibility, corrupted storage) was run against the live URL as well as locally. Screenshots in this README come from the live site, made by `tests/screenshots.mjs` with sample data.
 
 Run it locally: `node tests/serve.js` then open http://localhost:8080/ (or open `docs/index.html` directly).
 Run the tests: `npm install` then `npm test` (unit) and `npm run e2e` (needs Google Chrome; set `CHROME=/path/to/chrome` if it is not at `/usr/bin/google-chrome`). `BASE_URL=https://... npm run e2e` runs the same click-through against a deployed copy.
