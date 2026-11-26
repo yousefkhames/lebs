@@ -151,3 +151,14 @@ test('theme contrast meets WCAG AA (4.5:1) for text in both demo brands', () => 
     assert.ok(contrast(onAccent2, t.accent2) >= 4.5, name + ' text on accent2 ' + contrast(onAccent2, t.accent2).toFixed(2));
   }
 });
+
+test('one-size items read naturally in the WhatsApp message', () => {
+  const it = [{ id: 'open-abaya', color: 'ink', size: 'Free', qty: 1 }];
+  const en = L.buildMessage({ cfg, lang: 'en', mode: 'order', items: it, customer: { name: 'A', phone: '1' }, orderId: 'X' });
+  const ar = L.buildMessage({ cfg, lang: 'ar', mode: 'order', items: it, customer: { name: 'A', phone: '1' }, orderId: 'X' });
+  assert.match(en, /size: one size/); assert.match(ar, /المقاس: مقاس واحد/);
+});
+test('sanitizeCart survives garbage input', () => {
+  assert.deepEqual(L.sanitizeCart('oops', cfg.products), []); assert.deepEqual(L.sanitizeCart(null, cfg.products), []);
+  assert.equal(L.sanitizeCart([null, 5, 'x', { id: 'heavy-tee', color: 'ink', size: 'M', qty: 1 }], cfg.products).length, 1);
+});

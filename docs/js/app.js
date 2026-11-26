@@ -23,9 +23,10 @@
 
   var lang = load(K.lang, null) || cfg.defaultLang || 'ar';
   if (lang !== 'ar' && lang !== 'en') lang = 'ar';
-  var cart = L.sanitizeCart(load(K.cart, []), cfg.products);
-  var fav = load(K.fav, []).filter(function (id) { return cfg.products.some(function (p) { return p.id === id; }); });
-  var orders = load(K.orders, []);
+  function loadList(k) { var v = load(k, []); return Array.isArray(v) ? v : []; }
+  var cart = L.sanitizeCart(loadList(K.cart), cfg.products);
+  var fav = loadList(K.fav).filter(function (id) { return cfg.products.some(function (p) { return p.id === id; }); });
+  var orders = loadList(K.orders).filter(function (o) { return o && Array.isArray(o.items) && o.id; });
   var T = function (k, o) { var s = (I[lang][k] != null ? I[lang][k] : I.en[k]) || k; return o ? s.replace(/\{(\w+)\}/g, function (_, x) { return o[x]; }) : s; };
   var tr = function (o) { return L.tr(o, lang); };
   var price = function (n) { return L.formatPrice(n, lang, cfg); };
@@ -33,6 +34,7 @@
   var prod = function (id) { return cfg.products.filter(function (p) { return p.id === id; })[0]; };
   var catName = function (id) { var c = cfg.categories.filter(function (x) { return x.id === id; })[0]; return c ? tr(c.name) : id; };
   var now = function () { return Date.now(); };
+  var sz = function (s) { return s === 'Free' ? T('oneSize') : s; };
 
   /* ---------- theme ---------- */
   (function applyTheme() {
@@ -190,7 +192,7 @@
     function hr(o) { return L.buildHash('shop', null, Object.assign({}, q, o)); }
     var chips = [['all', T('all')]].concat(cfg.categories.map(function (c) { return [c.id, tr(c.name)]; }))
       .map(function (c) { return '<a class="chip' + (f.cat === c[0] ? ' on' : '') + '" href="' + hr({ cat: c[0] === 'all' ? '' : c[0] }) + '"' + (f.cat === c[0] ? ' aria-current="true"' : '') + '>' + esc(c[1]) + '</a>'; }).join('');
-    var szHtml = sizeKeys.map(function (s) { return '<a class="size-chip' + (f.size === s ? ' on' : '') + '" href="' + hr({ size: f.size === s ? '' : s }) + '" aria-pressed="' + (f.size === s) + '">' + esc(s) + '</a>'; }).join('');
+    var szHtml = sizeKeys.map(function (s) { return '<a class="size-chip' + (f.size === s ? ' on' : '') + '" href="' + hr({ size: f.size === s ? '' : s }) + '" aria-pressed="' + (f.size === s) + '">' + esc(sz(s)) + '</a>'; }).join('');
     var colHtml = colorKeys.map(function (c) { var d = cfg.palette[c]; return '<a class="swatch link' + (f.color === c ? ' on' : '') + '" href="' + hr({ color: f.color === c ? '' : c }) + '" style="--c:' + d.hex + '" title="' + esc(tr(d)) + '" aria-label="' + esc(tr(d)) + '" aria-pressed="' + (f.color === c) + '"></a>'; }).join('');
     var sorts = [['new', 'sortNew'], ['low', 'sortLow'], ['high', 'sortHigh'], ['name', 'sortName']].map(function (s) { return '<option value="' + s[0] + '"' + (f.sort === s[0] ? ' selected' : '') + '>' + T(s[1]) + '</option>'; }).join('');
     return '<section class="block shop"><h1 class="page-title">' + T('shop') + '</h1>' +
@@ -226,7 +228,7 @@
       '<p class="desc">' + esc(tr(p.desc)) + '</p>' +
       '<div class="opt"><p class="flabel">' + T('colorLabel') + ': <b id="colorName"></b></p>' + swatches(p, sel.color, 'lg', true) + '</div>' +
       '<div class="opt"><p class="flabel">' + T('sizeLabel') + ' <span class="stockmsg" id="stockMsg"></span></p><div class="size-row" id="sizes" role="radiogroup" aria-label="' + T('sizeLabel') + '">' +
-      sizes.map(function (s) { var n = p.sizes[s]; return '<button type="button" role="radio" aria-checked="false" class="size-chip" data-size="' + esc(s) + '"' + (n <= 0 ? ' disabled' : '') + '>' + esc(s) + (n <= 0 ? '<em>' + T('sizeSoldOut') + '</em>' : '') + '</button>'; }).join('') + '</div></div>' +
+      sizes.map(function (s) { var n = p.sizes[s]; return '<button type="button" role="radio" aria-checked="false" class="size-chip" data-size="' + esc(s) + '"' + (n <= 0 ? ' disabled' : '') + '>' + esc(sz(s)) + (n <= 0 ? '<em>' + T('sizeSoldOut') + '</em>' : '') + '</button>'; }).join('') + '</div></div>' +
       '<div class="opt"><p class="flabel">' + T('qty') + '</p><div class="stepper"><button type="button" id="qm" aria-label="-">&minus;</button><output id="qv">1</output><button type="button" id="qp" aria-label="+">+</button></div></div>' +
       '<div class="actions"><button type="button" class="btn primary" id="addBag">' + T('addBag') + '</button><button type="button" class="btn wa" id="reserveBtn">' + ic.wa + T('reserve') + '</button>' +
       '<button type="button" class="btn ghost fav-big' + (fav.indexOf(p.id) >= 0 ? ' on' : '') + '" data-fav="' + p.id + '" aria-pressed="' + (fav.indexOf(p.id) >= 0) + '">' + ic.heart + '<span>' + (fav.indexOf(p.id) >= 0 ? T('saved') : T('save')) + '</span></button>' +
@@ -298,7 +300,7 @@
     var lines = cart.map(function (i) {
       var p = prod(i.id), key = L.lineKey(i), c = cfg.palette[i.color];
       return '<li class="line" data-key="' + esc(key) + '"><a class="line-img" href="#/p/' + p.id + '">' + imgHtml(p, i.color, 0) + '</a><div class="line-info"><a href="#/p/' + p.id + '"><b>' + esc(tr(p.name)) + '</b></a>' +
-        '<p class="meta"><i class="swatch tiny" style="--c:' + c.hex + '"></i> ' + esc(tr(c)) + ' / ' + esc(i.size) + '</p>' +
+        '<p class="meta"><i class="swatch tiny" style="--c:' + c.hex + '"></i> ' + esc(tr(c)) + ' / ' + esc(sz(i.size)) + '</p>' +
         '<div class="line-row"><div class="stepper sm"><button type="button" data-q="-1" aria-label="-">&minus;</button><output>' + num(i.qty) + '</output><button type="button" data-q="1" aria-label="+">+</button></div><span class="pr">' + price(p.price * i.qty) + '</span></div></div>' +
         '<button type="button" class="rm" data-rm="1" aria-label="' + T('remove') + ': ' + esc(tr(p.name)) + '">&times;</button></li>';
     }).join('');
@@ -374,7 +376,7 @@
 
   function pageOrders() {
     var rows = orders.map(function (o, idx) {
-      var items = o.items.map(function (i) { var p = prod(i.id); return p ? num(i.qty) + ' x ' + esc(L.tr(p.name, lang)) + ' (' + esc(i.size) + ')' : ''; }).filter(Boolean).join('<br>');
+      var items = o.items.map(function (i) { var p = prod(i.id); return p ? num(i.qty) + ' x ' + esc(L.tr(p.name, lang)) + ' (' + esc(sz(i.size)) + ')' : ''; }).filter(Boolean).join('<br>');
       return '<li class="order"><div><b>' + (o.mode === 'reserve' ? T('statusReserve') : T('statusOrder')) + '</b> <span class="meta">' + T('ref') + ' ' + esc(o.id) + ' &middot; ' + new Date(o.ts).toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + '</span></div><p>' + items + '</p><div class="line-row"><span class="pr">' + price(o.total) + '</span><button type="button" class="btn ghost small" data-re="' + idx + '">' + T('reorder') + '</button></div></li>';
     }).join('');
     return '<section class="block"><h1 class="page-title">' + T('ordersTitle') + '</h1><p class="sub">' + T('ordersSub') + '</p>' +
@@ -425,6 +427,7 @@
     if (r.name === 'shop') bindShop(r.query);
     var key = r.name + '/' + (r.arg || '');
     if (keepScroll !== true && key !== lastKey) window.scrollTo(0, 0);
+    if (key !== lastKey && lastKey !== '') app.focus({ preventScroll: true });
     lastKey = key;
     if (r.name === 'shop' && r.query.q && $('#hq')) $('#hq').value = r.query.q;
   }
@@ -448,7 +451,7 @@
   }
   window.addEventListener('hashchange', function () { route(); });
   window.addEventListener('storage', function (e) {
-    if (e.key === K.cart) { cart = L.sanitizeCart(load(K.cart, []), cfg.products); renderChrome(); }
+    if (e.key === K.cart) { cart = L.sanitizeCart(loadList(K.cart), cfg.products); renderChrome(); }
   });
 
   document.documentElement.lang = lang; document.documentElement.dir = I[lang].dir;

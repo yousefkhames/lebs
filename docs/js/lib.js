@@ -165,7 +165,8 @@
   /* Drop lines for products/sizes that no longer exist, clamp quantities to stock. */
   function sanitizeCart(cart, products) {
     var out = [];
-    (cart || []).forEach(function (i) {
+    (Array.isArray(cart) ? cart : []).forEach(function (i) {
+      if (!i || typeof i !== 'object') return;
       var p = products.filter(function (x) { return x.id === i.id; })[0];
       if (!p || !p.sizes || !(i.size in p.sizes) || (p.colors || []).indexOf(i.color) < 0) return;
       var qty = Math.min(i.qty | 0, Math.max(0, p.sizes[i.size] | 0) - qtyOfSize(out, i.id, i.size));
@@ -205,7 +206,7 @@
       name: 'Name: {v}', phone: 'Phone: {v}', addr: 'Address: {v}', notes: 'Notes: {v}',
       hold: 'Please hold them for {h} hours.', pay: 'Payment on delivery, to be confirmed with you.',
       pickupPay: 'I will pay at pickup.',
-      color: 'color', size: 'size'
+      color: 'color', size: 'size', oneSize: 'one size'
     },
     ar: {
       hiOrder: 'مرحباً {store}، أرغب في طلب المنتجات التالية',
@@ -214,7 +215,7 @@
       name: 'الاسم: {v}', phone: 'الهاتف: {v}', addr: 'العنوان: {v}', notes: 'ملاحظات: {v}',
       hold: 'برجاء حجزها لمدة {h} ساعة.', pay: 'الدفع عند الاستلام، ونتفق على التفاصيل معكم.',
       pickupPay: 'سأدفع عند الاستلام من المتجر.',
-      color: 'اللون', size: 'المقاس'
+      color: 'اللون', size: 'المقاس', oneSize: 'مقاس واحد'
     }
   };
   function f(s, o) { return s.replace(/\{(\w+)\}/g, function (_, k) { return o[k]; }); }
@@ -230,7 +231,7 @@
       if (!p) return;
       var col = cfg.palette[i.color];
       L.push('- ' + i.qty + ' x ' + tr(p.name, lang) + ' (' + m.color + ': ' + (col ? tr(col, lang) : i.color) +
-        ', ' + m.size + ': ' + i.size + ') = ' + formatPrice(p.price * i.qty, lang, cfg));
+        ', ' + m.size + ': ' + (i.size === 'Free' ? m.oneSize : i.size) + ') = ' + formatPrice(p.price * i.qty, lang, cfg));
     });
     L.push('');
     var sub = cartSubtotal(o.items, products), fee = deliveryFee(sub, o.mode, cfg);

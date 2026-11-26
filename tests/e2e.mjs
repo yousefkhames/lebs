@@ -204,6 +204,14 @@ for (const lang of ['en', 'ar']) {
   ok(`${lang}: every page has one h1, named controls, unique ids, alt text`);
 }
 
+// --- resilience: garbage in localStorage, unknown product, removed product in an old bag
+await page.evaluate(() => { const p = 'lebs:zahra-studio:'; localStorage.setItem(p + 'cart', '{not json'); localStorage.setItem(p + 'fav', '"oops"'); localStorage.setItem(p + 'orders', 'null'); });
+await page.goto(base + '#/', { waitUntil: 'networkidle0' }); await page.reload({ waitUntil: 'networkidle0' }); assert.ok((await count('.tag')) >= 4); ok('corrupted localStorage does not break the store');
+await page.evaluate(() => localStorage.setItem('lebs:zahra-studio:cart', JSON.stringify([{ id: 'deleted-product', color: 'ink', size: 'M', qty: 2 }, { id: 'heavy-tee', color: 'ink', size: 'M', qty: 1 }])));
+await page.reload({ waitUntil: 'networkidle0' }); await go('#/cart'); assert.equal(await count('.line'), 1); ok('bag lines for products no longer in the catalog are dropped');
+await go('#/p/does-not-exist'); assert.ok(await $('.empty')); ok('unknown product shows a not-found page');
+await go('#/shop'); await sleep(100); assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.id), 'app'); ok('focus moves to the page content after navigation');
+
 // --- keyboard: tab reaches the language button and Enter activates it
 await page.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
 await page.evaluate(() => localStorage.setItem('lebs:zahra-studio:lang', '"en"')); await page.reload({ waitUntil: 'networkidle0' });

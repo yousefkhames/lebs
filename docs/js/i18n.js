@@ -36,7 +36,7 @@
       footerNote: 'Powered by Lebs, a white-label clothing store kit.', madeBy: 'Demo data. Orders go to the number set in the store config.',
       configError: 'The store config has a problem:', notFound: 'We could not find that page.', langName: 'English',
       items: 'items', pcs: 'pcs', menu: 'Menu', close: 'Close', itemsInBag: '{n} in bag',
-      filtersToggle: 'Filters', applyClose: 'Show results', share: 'Share'
+      filtersToggle: 'Filters', applyClose: 'Show results', share: 'Share', oneSize: 'One size'
     },
     ar: {
       dir: 'rtl', langBtn: 'English', skip: 'تخطَّ إلى المحتوى',
@@ -69,7 +69,7 @@
       footerNote: 'يعمل بنظام Lebs لمتاجر الملابس.', madeBy: 'بيانات تجريبية. الطلبات تذهب للرقم المحدد في إعدادات المتجر.',
       configError: 'هناك مشكلة في إعدادات المتجر:', notFound: 'لم نجد هذه الصفحة.', langName: 'العربية',
       items: 'قطعة', pcs: 'قطعة', menu: 'القائمة', close: 'إغلاق', itemsInBag: '{n} في الحقيبة',
-      filtersToggle: 'الفلاتر', applyClose: 'عرض النتائج', share: 'مشاركة'
+      filtersToggle: 'الفلاتر', applyClose: 'عرض النتائج', share: 'مشاركة', oneSize: 'مقاس واحد'
     }
   };
 });
