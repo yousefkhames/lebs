@@ -15,6 +15,15 @@ Catalog with sizes and colors, orders and reservations that arrive on WhatsApp, 
 </p>
 <p align="center"><img src="docs/screenshots/home-desktop-en.png" width="90%" alt="Home on desktop"></p>
 
+## Screenshots
+
+Captured from the live site (https://yousefkhames.github.io/lebs/).
+
+<p>
+  <img src="docs/screenshots/live-desktop.png" alt="lebs desktop view" width="640">
+  <img src="docs/screenshots/live-mobile.png" alt="lebs mobile view" width="200">
+</p>
+
 ## The pitch
 
 Small clothing shops do their selling in WhatsApp and Instagram DMs. They do not need a payment gateway or a monthly platform fee. They need a clean catalog, customers who pick a size and color before they write, and a message that arrives already complete: items, sizes, total, name, phone, address.
