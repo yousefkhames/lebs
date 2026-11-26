@@ -7,7 +7,9 @@
   <meta name="description" content="Clothing store">
   <meta name="theme-color" content="#F4EDE1">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml" id="favicon">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <a class="skip" href="#app" id="skip">Skip to content</a>
@@ -28,5 +30,10 @@
   <script src="js/i18n.js"></script>
   <script src="js/art.js"></script>
   <script src="js/app.js"></script>
+<script>
+if ('serviceWorker' in navigator && /^https:|^http:\/\/localhost/.test(location.protocol + '//' + location.host)) {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+}
+</script>
 </body>
 </html>

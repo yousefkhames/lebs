@@ -55,6 +55,8 @@ The browser click-through (67 checks: filters, bag, stock limits, WhatsApp links
 Run it locally: `node tests/serve.js` then open http://localhost:8080/ (or open `docs/index.html` directly).
 Run the tests: `npm install` then `npm test` (unit) and `npm run e2e` (needs Google Chrome; set `CHROME=/path/to/chrome` if it is not at `/usr/bin/google-chrome`). `BASE_URL=https://... npm run e2e` runs the same click-through against a deployed copy.
 
+`node tests/offline.mjs <url>` checks the service worker, manifest and icons, and that the store renders with the network off.
+
 ## Rebranding for a client
 
 1. **Copy the repo** (fork it, or download the ZIP) for the client.
@@ -84,6 +86,7 @@ To update stock or add arrivals later, edit the config and upload it again. Date
 
 ## Honest limits
 
+- The store works offline after the first visit (service worker, manifest and icons are included). If you change files, bump `VERSION` in `docs/sw.js` so returning visitors get the update. Product photos you add are cached as they are viewed, not all up front. Sending an order still needs a connection because it opens WhatsApp.
 - **It is a static demo store, not a full e-commerce platform.** There is no server, no database, no payment processing and no admin screen. The owner edits `lebs.config.js`.
 - **Data is per browser.** The bag, saved pieces and order history live in that visitor's `localStorage`. They do not sync across devices, and clearing browser data removes them. The store owner does not see them: the owner's copy of an order is the WhatsApp message.
 - **Stock is not live.** Stock numbers come from the config and are not reduced when someone orders. The owner confirms availability in the WhatsApp chat.
