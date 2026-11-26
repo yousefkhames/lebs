@@ -1,8 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const L = require('../site/js/lib.js');
-const I = require('../site/js/i18n.js');
-global.window = {}; require('../site/lebs.config.js');
+const L = require('../docs/js/lib.js');
+const I = require('../docs/js/i18n.js');
+global.window = {}; require('../docs/lebs.config.js');
 const cfg = window.LEBS_CONFIG, NOW = Date.now();
 
 test('demo config is valid', () => assert.deepEqual(L.validateConfig(cfg), []));
@@ -116,7 +116,18 @@ test('router', () => {
   assert.equal(L.parseHash(L.buildHash('shop', null, { q: 'عباية' })).query.q, 'عباية');
 });
 test('every product has a drawable art type', () => {
-  global.self = global; require('../site/js/art.js');
+  global.self = global; require('../docs/js/art.js');
   const art = global.LebsArt;
   cfg.products.forEach(p => { const s = art.garment(p.art, cfg.palette[p.colors[0]].hex, 0, {}); assert.match(s, /^<svg/); assert.ok(s.length > 500, p.id); });
+});
+
+test('example config (rebranding demo) is valid and bilingual', () => {
+  const keep = window.LEBS_CONFIG; delete window.LEBS_CONFIG;
+  delete require.cache[require.resolve('../docs/examples/noor.config.js')]; require('../docs/examples/noor.config.js');
+  const n = window.LEBS_CONFIG; window.LEBS_CONFIG = keep;
+  assert.deepEqual(L.validateConfig(n), []);
+  assert.notEqual(n.brand.name.en, keep.brand.name.en); assert.notEqual(n.theme.accent, keep.theme.accent);
+  n.products.forEach(p => { assert.ok(p.name.ar && p.desc.ar); });
+  const m = L.buildMessage({ cfg: n, lang: 'en', mode: 'order', items: [{ id: 'silk-scarf', color: 'blush', size: 'Free', qty: 1 }], customer: { name: 'A', phone: '1', address: 'x' }, orderId: 'LB-1' });
+  assert.match(m, /Noor Boutique/); assert.match(m, /AED/); assert.match(m, /Delivery: 15 AED/);
 });

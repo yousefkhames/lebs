@@ -17,7 +17,13 @@
   <nav class="dock" id="dock" aria-label="Main"></nav>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <noscript><p style="padding:2rem;font-family:sans-serif">This store needs JavaScript.</p></noscript>
-  <script src="lebs.config.js"></script>
+  <script>
+  // Config selection: lebs.config.js by default. "?demo=noor" loads examples/noor.config.js (rebranding demo).
+  (function () {
+    var m = /[?&]demo=([a-z0-9-]{1,30})(&|$)/.exec(location.search);
+    document.write('<script src="' + (m ? 'examples/' + m[1] + '.config.js' : 'lebs.config.js') + '"><\/script>');
+  })();
+  </script>
   <script src="js/lib.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/art.js"></script>

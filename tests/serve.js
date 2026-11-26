@@ -1,6 +1,6 @@
 // Tiny static server for local testing: node tests/serve.js [port]
 const http = require('http'), fs = require('fs'), path = require('path');
-const root = path.join(__dirname, '..', 'site'), port = +process.argv[2] || 8080;
+const root = path.join(__dirname, '..', 'docs'), port = +process.argv[2] || 8080;
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.png': 'image/png', '.jpg': 'image/jpeg' };
 http.createServer((req, res) => {
   let p = path.normalize(decodeURIComponent(req.url.split('?')[0])).replace(/^(\.\.[/\\])+/, '');

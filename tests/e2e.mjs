@@ -145,6 +145,31 @@ await page.setViewport({ width: 1280, height: 800 });
 await go('#/'); await sleep(200); assert.ok(await page.$eval('.nav', e => getComputedStyle(e).display !== 'none')); assert.ok(await page.$eval('#dock', e => getComputedStyle(e).display === 'none')); ok('desktop: top nav shown, bottom dock hidden');
 await shot('home-desktop-en');
 
+// --- share + color in URL
+await page.evaluate(() => localStorage.setItem('lebs:zahra-studio:lang', '"en"')); await page.reload({ waitUntil: 'networkidle0' });
+await go('#/p/heavy-tee'); await sleep(200);
+await page.click('.pdp .opt .swatch[data-color="clay"]'); await sleep(100);
+assert.ok(page.url().includes('color=clay')); ok('chosen color goes into the product URL');
+await page.evaluate(() => { window.__opened = []; window.open = (u) => { window.__opened.push(u); return null; }; Object.defineProperty(navigator, 'share', { value: undefined, configurable: true }); });
+await page.click('#shareBtn'); await sleep(100);
+const sh = await page.evaluate(() => window.__opened[0]); assert.ok(sh.startsWith('https://wa.me/?text=') && decodeURIComponent(sh).includes('color=clay')); ok('share falls back to a WhatsApp link that keeps the color');
+await page.goto(base + '#/p/heavy-tee?color=olive', { waitUntil: 'networkidle0' }); await sleep(200);
+assert.equal(await text('#colorName'), 'Olive'); ok('opening a product link with ?color= preselects it');
+
+// --- rebranding demo (?demo=noor) and broken config handling
+const demo = await browser.newPage(); await demo.setViewport({ width: 390, height: 844, isMobile: true });
+await demo.goto(base + '?demo=noor#/shop', { waitUntil: 'networkidle0' });
+assert.equal(await demo.$eval('.brand-name', e => e.textContent.trim()), 'Noor Boutique'); ok('?demo=noor loads the second brand from its own config');
+assert.equal(await demo.$eval('html', e => e.dir), 'ltr'); assert.equal(await demo.$$eval('.tag', e => e.length), 6); assert.match(await demo.$eval('.tag .pr', e => e.textContent), /AED/); ok('second brand: own language default, 6 products, AED prices');
+assert.notEqual(await demo.$eval('body', e => getComputedStyle(e).backgroundColor), await page.$eval('body', e => getComputedStyle(e).backgroundColor)); ok('second brand: different theme colors');
+if (shots) await demo.screenshot({ path: `${shots}/demo-noor.png` });
+await demo.close();
+assert.deepEqual(problems, [], 'browser problems so far: ' + problems.join(' | '));
+const bad = await browser.newPage(); await bad.goto(base + '?demo=does-not-exist', { waitUntil: 'networkidle0' });
+assert.match(await bad.$eval('#app', e => e.textContent), /config/i); ok('missing config shows a readable error instead of a blank page');
+await bad.close();
+problems.length = 0; // the 404 above is expected
+
 // --- keyboard: tab reaches the language button and Enter activates it
 await page.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
 await page.evaluate(() => localStorage.setItem('lebs:zahra-studio:lang', '"en"')); await page.reload({ waitUntil: 'networkidle0' });

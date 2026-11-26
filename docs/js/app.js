@@ -213,10 +213,10 @@
       (list.length ? sec('week', T('thisWeek')) + sec('lastWeek', T('lastWeek')) + sec('earlier', T('earlier')) : '<div class="empty block"><p>' + T('noNew') + '</p><a class="btn primary" href="#/shop">' + T('shopNow') + '</a></div>');
   }
 
-  function pageProduct(id) {
+  function pageProduct(id, query) {
     var p = prod(id);
     if (!p) return pageNotFound();
-    var sel = { color: p.colors[0], size: '', qty: 1, view: 0 };
+    var sel = { color: p.colors.indexOf((query || {}).color) >= 0 ? query.color : p.colors[0], size: '', qty: 1, view: 0 };
     var sizes = L.sizeList(p, cfg.sizeOrder);
     var rel = cfg.products.filter(function (x) { return x.category === p.category && x.id !== p.id; }).slice(0, 4);
     var html = '<section class="block pdp" id="pdp"><a class="back" href="#/shop">' + T('back') + '</a><div class="pdp-grid">' +
@@ -229,7 +229,8 @@
       sizes.map(function (s) { var n = p.sizes[s]; return '<button type="button" role="radio" aria-checked="false" class="size-chip" data-size="' + esc(s) + '"' + (n <= 0 ? ' disabled' : '') + '>' + esc(s) + (n <= 0 ? '<em>' + T('sizeSoldOut') + '</em>' : '') + '</button>'; }).join('') + '</div></div>' +
       '<div class="opt"><p class="flabel">' + T('qty') + '</p><div class="stepper"><button type="button" id="qm" aria-label="-">&minus;</button><output id="qv">1</output><button type="button" id="qp" aria-label="+">+</button></div></div>' +
       '<div class="actions"><button type="button" class="btn primary" id="addBag">' + T('addBag') + '</button><button type="button" class="btn wa" id="reserveBtn">' + ic.wa + T('reserve') + '</button>' +
-      '<button type="button" class="btn ghost fav-big' + (fav.indexOf(p.id) >= 0 ? ' on' : '') + '" data-fav="' + p.id + '" aria-pressed="' + (fav.indexOf(p.id) >= 0) + '">' + ic.heart + '<span>' + (fav.indexOf(p.id) >= 0 ? T('saved') : T('save')) + '</span></button></div>' +
+      '<button type="button" class="btn ghost fav-big' + (fav.indexOf(p.id) >= 0 ? ' on' : '') + '" data-fav="' + p.id + '" aria-pressed="' + (fav.indexOf(p.id) >= 0) + '">' + ic.heart + '<span>' + (fav.indexOf(p.id) >= 0 ? T('saved') : T('save')) + '</span></button>' +
+      '<button type="button" class="btn ghost share" id="shareBtn">' + T('share') + '</button></div>' +
       '<p class="hint" id="pickHint" role="alert"></p><p class="hint soft">' + esc(tr(cfg.delivery.note)) + '</p></div></div>' +
       (rel.length ? '<div class="block flush">' + sectionHead(T('related')) + grid(rel) + '</div>' : '') + '</section>';
     setTimeout(function () { bindProduct(p, sel, sizes); bindCards($('#pdp')); }, 0);
@@ -272,7 +273,12 @@
       toast(r.reason === 'partial' ? T('onlyLeft', { n: num(p.sizes[sel.size]), a: num(r.added) }) : T('added'));
       return true;
     }
-    $$('#pdp .opt .swatch').forEach(function (b) { b.onclick = function () { sel.color = b.dataset.color; drawGallery(); sync(); }; });
+    $$('#pdp .opt .swatch').forEach(function (b) { b.onclick = function () { sel.color = b.dataset.color; drawGallery(); sync(); history.replaceState(null, '', L.buildHash('p', p.id, { color: sel.color })); }; });
+    $('#shareBtn').onclick = function () {
+      var link = location.href.split('#')[0] + L.buildHash('p', p.id, { color: sel.color }), text = tr(p.name) + ' - ' + tr(cfg.brand.name);
+      if (navigator.share) navigator.share({ title: text, url: link }).catch(function () {});
+      else window.open('https://wa.me/?text=' + encodeURIComponent(text + '\n' + link), '_blank', 'noopener');
+    };
     $$('#sizes .size-chip').forEach(function (b) { b.onclick = function () { sel.size = b.dataset.size; sel.qty = 1; $('#pickHint').textContent = ''; sync(); }; });
     $('#qm').onclick = function () { sel.qty = Math.max(1, sel.qty - 1); sync(); };
     $('#qp').onclick = function () {
@@ -403,7 +409,7 @@
       case 'home': html = pageHome(); break;
       case 'shop': html = pageShop(r.query); break;
       case 'new': html = pageNew(); break;
-      case 'p': html = pageProduct(r.arg); break;
+      case 'p': html = pageProduct(r.arg, r.query); break;
       case 'cart': html = pageCart(r.query); break;
       case 'saved': html = pageSaved(); break;
       case 'orders': html = pageOrders(); break;
