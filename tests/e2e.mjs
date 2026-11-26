@@ -185,6 +185,25 @@ assert.match(await bad.$eval('#app', e => e.textContent), /config/i); ok('missin
 await bad.close();
 problems.length = 0; // the 404 above is expected
 
+// --- accessibility sweep: one h1, every control has a name, no duplicate ids, images have alt
+for (const lang of ['en', 'ar']) {
+  await page.evaluate(l => localStorage.setItem('lebs:zahra-studio:lang', JSON.stringify(l)), lang); await page.reload({ waitUntil: 'networkidle0' });
+  for (const h of ['#/', '#/shop', '#/new', '#/p/open-abaya', '#/cart', '#/saved', '#/orders', '#/about']) {
+    await go(h); await sleep(150);
+    const r = await page.evaluate(() => {
+      const name = (e) => (e.getAttribute('aria-label') || e.textContent || e.getAttribute('title') || '').trim();
+      const ctrls = [...document.querySelectorAll('a[href], button, select, input, textarea')].filter(e => !e.closest('[hidden]') && e.type !== 'hidden');
+      const unnamed = ctrls.filter(e => { if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.tagName)) return !(e.labels && e.labels.length) && !e.getAttribute('aria-label'); return !name(e); }).map(e => e.outerHTML.slice(0, 80));
+      const ids = [...document.querySelectorAll('[id]')].map(e => e.id), dup = ids.filter((x, i) => ids.indexOf(x) !== i);
+      const noAlt = [...document.querySelectorAll('img:not([alt])')].map(e => e.src);
+      return { h1: document.querySelectorAll('h1').length, unnamed, dup, noAlt, lang: document.documentElement.lang };
+    });
+    assert.equal(r.h1, 1, `h1 count on ${h} (${lang})`); assert.deepEqual(r.unnamed, [], `unnamed controls on ${h} (${lang})`);
+    assert.deepEqual(r.dup, [], `duplicate ids on ${h}`); assert.deepEqual(r.noAlt, []); assert.equal(r.lang, lang);
+  }
+  ok(`${lang}: every page has one h1, named controls, unique ids, alt text`);
+}
+
 // --- keyboard: tab reaches the language button and Enter activates it
 await page.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
 await page.evaluate(() => localStorage.setItem('lebs:zahra-studio:lang', '"en"')); await page.reload({ waitUntil: 'networkidle0' });

@@ -296,3 +296,14 @@ h2.solo { margin-bottom: 16px; }
 .share { grid-column: 1 / -1; }
 @media (min-width: 720px) { .share { grid-column: auto; } .actions { grid-template-columns: 1fr 1fr auto auto; } .actions .primary { grid-column: 1 / 3; } }
 @media (max-width: 719px) { .actions .fav-big, .actions .share { grid-column: auto; } .actions { grid-template-columns: 1fr 1fr; } }
+
+/* round 3 */
+.rail { height: 250px; }
+.gallery { max-width: 560px; width: 100%; }
+@media (min-width: 720px) {
+  .rail { height: 460px; }
+  .actions { grid-template-columns: repeat(3, 1fr); }
+  .actions .primary { grid-column: 1 / -1; }
+  .actions .fav-big, .actions .share { grid-column: auto; }
+  .fpanel .frow:first-child { grid-column: 1 / -1; }
+}
