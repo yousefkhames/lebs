@@ -156,6 +156,21 @@ const sh = await page.evaluate(() => window.__opened[0]); assert.ok(sh.startsWit
 await page.goto(base + '#/p/heavy-tee?color=olive', { waitUntil: 'networkidle0' }); await sleep(200);
 assert.equal(await text('#colorName'), 'Olive'); ok('opening a product link with ?color= preselects it');
 
+// --- real photos: config with images[] renders <img> instead of drawn garments
+const ph = await browser.newPage(); await ph.setViewport({ width: 390, height: 844, isMobile: true });
+await ph.setRequestInterception(true);
+ph.on('request', async (req) => {
+  if (!req.url().endsWith('lebs.config.js')) return req.continue();
+  const src = await (await fetch(req.url())).text();
+  const px = (c) => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500"><rect width="400" height="500" fill="${c}"/></svg>`);
+  req.respond({ status: 200, contentType: 'text/javascript', body: src + `;window.LEBS_CONFIG.products[0].images={sand:['${px('#caa')}','${px('#acb')}'],sage:['${px('#bcd')}']};` });
+});
+await ph.goto(base + '#/p/linen-overshirt', { waitUntil: 'networkidle0' }); await sleep(200);
+assert.equal(await ph.$$eval('#galMain img', e => e.length), 1); assert.equal(await ph.$$eval('.thumb', e => e.length), 2); ok('photos: product with images[] shows <img> gallery with its own number of views');
+await ph.click('.pdp .opt .swatch[data-color="sage"]'); await sleep(100);
+assert.equal(await ph.$$eval('.thumb', e => e.length), 1); ok('photos: per-color photo sets switch with the swatch');
+await ph.close();
+
 // --- rebranding demo (?demo=noor) and broken config handling
 const demo = await browser.newPage(); await demo.setViewport({ width: 390, height: 844, isMobile: true });
 await demo.goto(base + '?demo=noor#/shop', { waitUntil: 'networkidle0' });
