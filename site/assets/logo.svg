@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Lebs">
+<rect width="64" height="64" rx="14" fill="#1F1B16"/>
+<path d="M20 14c0 5 3 8 12 8s12-3 12-8" fill="none" stroke="#F4EDE1" stroke-width="3" stroke-linecap="round"/>
+<path d="M32 22v6M18 50V32l14-4 14 4v18z" fill="#C4532D" stroke="#F4EDE1" stroke-width="3" stroke-linejoin="round"/>
+<path d="M24 38h16" stroke="#F4EDE1" stroke-width="2" stroke-dasharray="3 3"/>
+</svg>

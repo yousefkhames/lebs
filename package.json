@@ -1,0 +1,13 @@
+{
+  "name": "lebs",
+  "version": "1.0.0",
+  "description": "White-label clothing store kit: static, bilingual, WhatsApp orders.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test tests/unit.test.js",
+    "serve": "node tests/serve.js",
+    "e2e": "node tests/e2e.mjs",
+    "check": "npm test && npm run e2e"
+  },
+  "devDependencies": { "puppeteer-core": "^25.0.0" }
+}

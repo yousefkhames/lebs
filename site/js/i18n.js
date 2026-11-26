@@ -1,0 +1,75 @@
+/* Interface strings (not store content: store content lives in lebs.config.js). */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.LebsI18n = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+  return {
+    en: {
+      dir: 'ltr', langBtn: 'عربي', skip: 'Skip to content',
+      navHome: 'Home', navShop: 'Shop', navNew: 'New in', navAbout: 'About', navOrders: 'My orders',
+      cart: 'Bag', wishlist: 'Saved', search: 'Search', searchPh: 'Search clothes, colors...',
+      shopNow: 'Shop now', seeNew: 'See new arrivals', seeAll: 'See all',
+      newIn: 'New arrivals', newInSub: 'Freshly added to the rack.', thisWeek: 'This week', lastWeek: 'Last week', earlier: 'Earlier this month',
+      noNew: 'Nothing new right now. Check the full shop.',
+      shop: 'The shop', all: 'All', category: 'Category', size: 'Size', color: 'Color', sort: 'Sort', anySize: 'Any size', anyColor: 'Any color',
+      sortNew: 'Newest', sortLow: 'Price: low to high', sortHigh: 'Price: high to low', sortName: 'Name',
+      onSale: 'On sale', inStockOnly: 'In stock only', clear: 'Clear filters', results: '{n} items', result1: '1 item',
+      noResults: 'No clothes match these filters.', filters: 'Filters',
+      newBadge: 'New', saleBadge: 'Sale', soldOut: 'Sold out', lowStock: 'Only {n} left',
+      colorLabel: 'Color', sizeLabel: 'Size', pickSize: 'Pick a size', qty: 'Quantity',
+      addBag: 'Add to bag', reserve: 'Reserve in store', orderNow: 'Order on WhatsApp',
+      added: 'Added to your bag', onlyLeft: 'Only {n} available in this size, added {a}.', noMore: 'No more pieces in this size.',
+      save: 'Save', saved: 'Saved', back: 'Back to shop', details: 'Details', viewN: 'View {n}',
+      sizeSoldOut: 'sold out', inStock: 'In stock', related: 'You may also like',
+      bagTitle: 'Your bag', bagEmpty: 'Your bag is empty.', startShopping: 'Start shopping', remove: 'Remove',
+      subtotal: 'Items', delivery: 'Delivery', free: 'Free', total: 'Total', freeFrom: 'Free delivery over {v}',
+      howTitle: 'How would you like it?', modeOrder: 'Deliver to me', modeOrderSub: 'Cash on delivery', modeReserve: 'Reserve for pickup', modeReserveSub: 'Held {h} hours, pay in store',
+      yourName: 'Your name', yourPhone: 'Phone number', yourAddress: 'Delivery address', yourNotes: 'Notes (optional)',
+      sendWa: 'Send on WhatsApp', sendWaReserve: 'Reserve on WhatsApp', waHint: 'This opens WhatsApp with your order written out. Nothing is sent until you press send there.',
+      errName: 'Please enter your name.', errPhone: 'Please enter a valid phone number.', errAddress: 'Please enter your address.', errEmpty: 'Your bag is empty.',
+      opened: 'Order saved on this device and WhatsApp opened.', sentTitle: 'WhatsApp is open', sentText: 'Press send in WhatsApp to finish. If it did not open, use the button below.', openAgain: 'Open WhatsApp again', copyMsg: 'Copy the message', copied: 'Copied', keepShopping: 'Keep shopping',
+      ordersTitle: 'My orders on this device', ordersSub: 'Saved only in this browser. Clearing browser data removes it.', noOrders: 'No orders yet.', reorder: 'Order again', ordersClear: 'Clear history',
+      statusOrder: 'Order', statusReserve: 'Reservation', ref: 'Ref',
+      wishTitle: 'Saved pieces', wishEmpty: 'Nothing saved yet. Tap the heart on a piece you like.',
+      aboutHere: 'Find us', hours: 'Hours', address: 'Address', deliveryInfo: 'Delivery',
+      footerNote: 'Powered by Lebs, a white-label clothing store kit.', madeBy: 'Demo data. Orders go to the number set in the store config.',
+      configError: 'The store config has a problem:', notFound: 'We could not find that page.', langName: 'English',
+      items: 'items', pcs: 'pcs', menu: 'Menu', close: 'Close', itemsInBag: '{n} in bag',
+      filtersToggle: 'Filters', applyClose: 'Show results'
+    },
+    ar: {
+      dir: 'rtl', langBtn: 'English', skip: 'تخطَّ إلى المحتوى',
+      navHome: 'الرئيسية', navShop: 'المتجر', navNew: 'وصل حديثاً', navAbout: 'عنّا', navOrders: 'طلباتي',
+      cart: 'الحقيبة', wishlist: 'المفضلة', search: 'بحث', searchPh: 'ابحث عن ملابس أو ألوان...',
+      shopNow: 'تسوّق الآن', seeNew: 'شاهد الجديد', seeAll: 'عرض الكل',
+      newIn: 'وصل حديثاً', newInSub: 'أضفناه للتو إلى الرف.', thisWeek: 'هذا الأسبوع', lastWeek: 'الأسبوع الماضي', earlier: 'في بداية الشهر',
+      noNew: 'لا جديد حالياً. تصفح المتجر كاملاً.',
+      shop: 'المتجر', all: 'الكل', category: 'القسم', size: 'المقاس', color: 'اللون', sort: 'الترتيب', anySize: 'أي مقاس', anyColor: 'أي لون',
+      sortNew: 'الأحدث', sortLow: 'السعر: الأقل أولاً', sortHigh: 'السعر: الأعلى أولاً', sortName: 'الاسم',
+      onSale: 'عليه خصم', inStockOnly: 'المتوفر فقط', clear: 'مسح الفلاتر', results: '{n} قطعة', result1: 'قطعة واحدة',
+      noResults: 'لا توجد ملابس مطابقة لهذه الفلاتر.', filters: 'الفلاتر',
+      newBadge: 'جديد', saleBadge: 'خصم', soldOut: 'نفد', lowStock: 'متبقي {n} فقط',
+      colorLabel: 'اللون', sizeLabel: 'المقاس', pickSize: 'اختر مقاساً', qty: 'الكمية',
+      addBag: 'أضف إلى الحقيبة', reserve: 'احجز في المتجر', orderNow: 'اطلب عبر واتساب',
+      added: 'تمت الإضافة إلى حقيبتك', onlyLeft: 'المتاح {n} فقط من هذا المقاس، تمت إضافة {a}.', noMore: 'لا توجد قطع أخرى من هذا المقاس.',
+      save: 'حفظ', saved: 'محفوظ', back: 'العودة للمتجر', details: 'التفاصيل', viewN: 'صورة {n}',
+      sizeSoldOut: 'نفد', inStock: 'متوفر', related: 'قد يعجبك أيضاً',
+      bagTitle: 'حقيبتك', bagEmpty: 'حقيبتك فارغة.', startShopping: 'ابدأ التسوق', remove: 'حذف',
+      subtotal: 'المنتجات', delivery: 'التوصيل', free: 'مجاني', total: 'الإجمالي', freeFrom: 'توصيل مجاني فوق {v}',
+      howTitle: 'كيف تفضّل الاستلام؟', modeOrder: 'وصّلوها لي', modeOrderSub: 'الدفع عند الاستلام', modeReserve: 'احجز للاستلام', modeReserveSub: 'محجوزة {h} ساعة، والدفع في المتجر',
+      yourName: 'اسمك', yourPhone: 'رقم الهاتف', yourAddress: 'عنوان التوصيل', yourNotes: 'ملاحظات (اختياري)',
+      sendWa: 'أرسل عبر واتساب', sendWaReserve: 'احجز عبر واتساب', waHint: 'سيفتح واتساب ومعه طلبك مكتوباً. لن يُرسل شيء حتى تضغط إرسال هناك.',
+      errName: 'من فضلك اكتب اسمك.', errPhone: 'من فضلك اكتب رقم هاتف صحيحاً.', errAddress: 'من فضلك اكتب عنوانك.', errEmpty: 'حقيبتك فارغة.',
+      opened: 'تم حفظ الطلب على هذا الجهاز وفتح واتساب.', sentTitle: 'واتساب مفتوح', sentText: 'اضغط إرسال في واتساب لإتمام الطلب. إن لم يفتح استخدم الزر بالأسفل.', openAgain: 'افتح واتساب مرة أخرى', copyMsg: 'انسخ الرسالة', copied: 'تم النسخ', keepShopping: 'تابع التسوق',
+      ordersTitle: 'طلباتي على هذا الجهاز', ordersSub: 'محفوظة في هذا المتصفح فقط. مسح بيانات المتصفح يحذفها.', noOrders: 'لا توجد طلبات بعد.', reorder: 'اطلب مرة أخرى', ordersClear: 'مسح السجل',
+      statusOrder: 'طلب', statusReserve: 'حجز', ref: 'الرقم',
+      wishTitle: 'القطع المحفوظة', wishEmpty: 'لم تحفظ شيئاً بعد. اضغط على القلب في قطعة تعجبك.',
+      aboutHere: 'زورونا', hours: 'مواعيد العمل', address: 'العنوان', deliveryInfo: 'التوصيل',
+      footerNote: 'يعمل بنظام Lebs لمتاجر الملابس.', madeBy: 'بيانات تجريبية. الطلبات تذهب للرقم المحدد في إعدادات المتجر.',
+      configError: 'هناك مشكلة في إعدادات المتجر:', notFound: 'لم نجد هذه الصفحة.', langName: 'العربية',
+      items: 'قطعة', pcs: 'قطعة', menu: 'القائمة', close: 'إغلاق', itemsInBag: '{n} في الحقيبة',
+      filtersToggle: 'الفلاتر', applyClose: 'عرض النتائج'
+    }
+  };
+});
