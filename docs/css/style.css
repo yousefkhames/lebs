@@ -10,7 +10,7 @@
 :root {
   --paper: #F4EDE1; --card: #FBF7EF; --ink: #1F1B16; --accent: #C4532D; --accent2: #23423A; --line: #CDBFA8;
   --accent-ink: #fff; --accent2-ink: #fff;
-  --muted: color-mix(in srgb, var(--ink) 62%, var(--paper));
+  --muted: color-mix(in srgb, var(--ink) 68%, var(--paper));
   --soft: color-mix(in srgb, var(--paper) 88%, var(--ink));
   --r: 14px; --dock: 64px; --wrap: 1180px;
   font-family: Body, system-ui, sans-serif;

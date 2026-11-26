@@ -25,7 +25,7 @@
       paper: '#F4EDE1',     // page background
       card: '#FBF7EF',      // tag / card background
       ink: '#1F1B16',       // text and dark surfaces
-      accent: '#C4532D',    // buttons, highlights
+      accent: '#B54A27',    // buttons, highlights
       accent2: '#23423A',   // secondary (new arrivals, success)
       line: '#CDBFA8'       // stitch lines and borders
     },

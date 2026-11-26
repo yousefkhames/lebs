@@ -131,3 +131,23 @@ test('example config (rebranding demo) is valid and bilingual', () => {
   const m = L.buildMessage({ cfg: n, lang: 'en', mode: 'order', items: [{ id: 'silk-scarf', color: 'blush', size: 'Free', qty: 1 }], customer: { name: 'A', phone: '1', address: 'x' }, orderId: 'LB-1' });
   assert.match(m, /Noor Boutique/); assert.match(m, /AED/); assert.match(m, /Delivery: 15 AED/);
 });
+
+function lin(c) { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
+function rgb(h) { h = h.replace('#', ''); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); }
+function L_(h) { const [r, g, b] = rgb(h); return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b); }
+function contrast(a, b) { const x = L_(a), y = L_(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+function mixHex(a, b, t) { const A = rgb(a), B = rgb(b); return '#' + A.map((v, i) => ('0' + Math.round(v + (B[i] - v) * t).toString(16)).slice(-2)).join(''); }
+test('theme contrast meets WCAG AA (4.5:1) for text in both demo brands', () => {
+  const noor = (() => { const keep = window.LEBS_CONFIG; delete require.cache[require.resolve('../docs/examples/noor.config.js')]; require('../docs/examples/noor.config.js'); const n = window.LEBS_CONFIG; window.LEBS_CONFIG = keep; return n; })();
+  for (const c of [cfg, noor]) {
+    const t = c.theme, name = c.brand.name.en;
+    const muted = mixHex(t.ink, t.paper, 0.32);   // matches --muted in the CSS
+    const onAccent = L_(t.accent) > 0.179 ? t.ink : '#ffffff', onAccent2 = L_(t.accent2) > 0.179 ? t.ink : '#ffffff';
+    assert.ok(contrast(t.ink, t.paper) >= 7, name + ' ink on paper');
+    assert.ok(contrast(muted, t.paper) >= 4.5, name + ' muted on paper ' + contrast(muted, t.paper).toFixed(2));
+    assert.ok(contrast(t.accent, t.paper) >= 4.5, name + ' accent text on paper ' + contrast(t.accent, t.paper).toFixed(2));
+    assert.ok(contrast(t.accent, t.card) >= 4.5, name + ' accent text on card ' + contrast(t.accent, t.card).toFixed(2));
+    assert.ok(contrast(onAccent, t.accent) >= 4.5, name + ' button text on accent ' + contrast(onAccent, t.accent).toFixed(2));
+    assert.ok(contrast(onAccent2, t.accent2) >= 4.5, name + ' text on accent2 ' + contrast(onAccent2, t.accent2).toFixed(2));
+  }
+});

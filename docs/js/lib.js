@@ -301,8 +301,19 @@
     return e;
   }
 
+  function relLum(hex) {
+    hex = hex.replace('#', '');
+    var c = [0, 2, 4].map(function (i) { var v = parseInt(hex.slice(i, i + 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  }
+  /* Text color (the theme ink or white) with the better contrast on a background. */
+  function pickInk(bg, ink) {
+    var b = relLum(bg), contrast = function (l) { return (Math.max(l, b) + 0.05) / (Math.min(l, b) + 0.05); };
+    return contrast(relLum(ink)) >= contrast(1) ? ink : '#ffffff';
+  }
+
   return {
-    tr: tr, toLatinDigits: toLatinDigits, normalizePhone: normalizePhone, isValidPhone: isValidPhone,
+    pickInk: pickInk, relLum: relLum, tr: tr, toLatinDigits: toLatinDigits, normalizePhone: normalizePhone, isValidPhone: isValidPhone,
     formatPrice: formatPrice, isNew: isNew, totalStock: totalStock, sizeList: sizeList,
     filterProducts: filterProducts, newArrivals: newArrivals, groupArrivals: groupArrivals,
     lineKey: lineKey, addToCart: addToCart, setQty: setQty, removeLine: removeLine, sanitizeCart: sanitizeCart,

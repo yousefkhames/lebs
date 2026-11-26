@@ -39,8 +39,8 @@
     var t = cfg.theme, r = document.documentElement.style;
     r.setProperty('--paper', t.paper); r.setProperty('--card', t.card || '#fff'); r.setProperty('--ink', t.ink);
     r.setProperty('--accent', t.accent); r.setProperty('--accent2', t.accent2 || t.ink); r.setProperty('--line', t.line || '#ccc');
-    r.setProperty('--accent-ink', Art.lum(t.accent) > 0.6 ? t.ink : '#fff');
-    r.setProperty('--accent2-ink', Art.lum(t.accent2 || t.ink) > 0.6 ? t.ink : '#fff');
+    r.setProperty('--accent-ink', L.pickInk(t.accent, t.ink));
+    r.setProperty('--accent2-ink', L.pickInk(t.accent2 || t.ink, t.ink));
     var meta = $('meta[name=theme-color]'); if (meta) meta.setAttribute('content', t.paper);
     if (cfg.brand.favicon) $('#favicon').setAttribute('href', cfg.brand.favicon);
   })();

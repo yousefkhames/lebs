@@ -6,7 +6,7 @@
   function daysAgo(n) { var d = new Date(Date.now() - n * 86400000); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   window.LEBS_CONFIG = {
     brand: { name: { en: 'Noor Boutique', ar: 'نور بوتيك' }, tagline: { en: 'Modest fashion, modern lines', ar: 'احتشام بخطوط عصرية' }, logo: 'examples/noor-logo.svg', favicon: 'examples/noor-logo.svg' },
-    theme: { paper: '#ECEFF3', card: '#F8F9FB', ink: '#14213D', accent: '#B8881C', accent2: '#0B6E4F', line: '#B9C2D0' },
+    theme: { paper: '#ECEFF3', card: '#F8F9FB', ink: '#14213D', accent: '#8A6410', accent2: '#0B6E4F', line: '#B9C2D0' },
     defaultLang: 'en',
     whatsapp: { number: '971500000000', defaultCountryCode: '971' },
     reservationHoldHours: 24, newArrivalsDays: 21,
