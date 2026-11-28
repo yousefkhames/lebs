@@ -1,3 +1,21 @@
+<div align="center">
+
+<img src="assets/yk-logo.svg" width="64" alt="YK">
+
+# lebs
+
+**lebs** · demo / portfolio project
+
+**متجر ملابس جاهز** · مشروع تجريبي للعرض
+
+[Live demo](https://yousefkhames.github.io/lebs/) · By Yousef Khames · من تطوير يوسف خميس
+
+<img src="assets/og.png" width="640" alt="lebs preview">
+
+</div>
+
+---
+
 # lebs · لبس
 
 A white-label clothing store kit: categories, products with size and colour variants and per-variant stock flags, filters (size, colour, max price, in stock, sort), saved items, an editable size guide, a bag and WhatsApp order drafts. Arabic RTL and English LTR. Static HTML, CSS and JavaScript; no build, account, API or payment processor.
