@@ -1,110 +1,51 @@
-<p align="center"><img src="docs/assets/logo.svg" width="96" alt="Lebs logo"></p>
+# lebs · لبس
 
-<h1 align="center">Lebs</h1>
-<p align="center"><b>A white-label clothing store you rebrand by editing one file.</b><br>
-Catalog with sizes and colors, orders and reservations that arrive on WhatsApp, a new-arrivals page, Arabic and English with full RTL.</p>
+A white-label clothing store kit: categories, products with size and colour variants and per-variant stock flags, filters (size, colour, max price, in stock, sort), saved items, an editable size guide, a bag and WhatsApp order drafts. Arabic RTL and English LTR. Static HTML, CSS and JavaScript; no build, account, API or payment processor.
 
-<p align="center"><a href="https://yousefkhames.github.io/lebs/"><b>Live demo</b></a> &middot;
-<a href="https://yousefkhames.github.io/lebs/?demo=noor">Second brand (same code, other config)</a></p>
+<div lang="ar" dir="rtl">متجر ملابس بأقسام ومقاسات وألوان وفلاتر ودليل مقاسات. الطلب عبر مسودة واتساب. لا يوجد دفع داخل الأداة.</div>
 
-<p align="center">
-<img src="docs/screenshots/home-en.png" width="23%" alt="Home">
-<img src="docs/screenshots/shop-en.png" width="23%" alt="Shop with filters">
-<img src="docs/screenshots/product-en.png" width="23%" alt="Product page">
-<img src="docs/screenshots/cart-ar.png" width="23%" alt="Checkout in Arabic, right to left">
-</p>
-<p align="center"><img src="docs/screenshots/home-desktop-en.png" width="90%" alt="Home on desktop"></p>
+<img src="assets/yk-logo.svg" width="24" height="24" alt=""> **By Yousef Khames · من تطوير يوسف خميس**
 
-## Screenshots
+## Preview locally
 
-Captured from the live site (https://yousefkhames.github.io/lebs/).
-
-<p>
-  <img src="docs/screenshots/live-desktop.png" alt="lebs desktop view" width="640">
-  <img src="docs/screenshots/live-mobile.png" alt="lebs mobile view" width="200">
-</p>
-
-## The pitch
-
-Small clothing shops do their selling in WhatsApp and Instagram DMs. They do not need a payment gateway or a monthly platform fee. They need a clean catalog, customers who pick a size and color before they write, and a message that arrives already complete: items, sizes, total, name, phone, address.
-
-Lebs is that, as a folder of static files. Put it on any free host, change `lebs.config.js`, and a new client has a branded store in an afternoon. "Hang tag" design: every product is a tag on a rail, with stitched borders and a punched hole, instead of the usual grid of white boxes.
-
-## Features
-
-- **Catalog**: categories, per-size stock, several colors per product, sale prices, "new" and "sold out" badges.
-- **Photos**: give a product `images` (one list, or one list per color) and the store shows your photos. Without photos it draws the garment in every color, so a catalog works on day one.
-- **Filter and search**: category, size (only sizes in stock), color, on sale, in stock, sort by newest or price, free-text search in Arabic or English (names, colors, categories).
-- **New arrivals page**: automatic from each product's `added` date, grouped into this week, last week and earlier. The window (default 30 days) is in the config.
-- **Bag**: stock-aware quantities (a size's stock is shared across colors), free-delivery threshold, survives reloads.
-- **Order or reserve on WhatsApp**: "Deliver to me" (cash on delivery) or "Reserve for pickup" (held for N hours, pay in store). Opens WhatsApp with the full message written in the customer's language. Nothing is sent until the customer presses send.
-- **Saved pieces** and **My orders** (history, "order again"), kept in the browser.
-- **Share** a product with its color via the share sheet or WhatsApp.
-- **Arabic and English**: one tap to switch, `dir` and `lang` follow, Arabic-Indic digits, logical CSS so layouts mirror correctly. Arabic and Latin phone input both work (`٠١٠٠...` is normalised).
-- **Mobile first**: bottom tab bar on phones, top navigation on desktop. Keyboard and screen-reader friendly (labels, focus rings, reduced-motion respected).
-- **One config**: name, logo, colors, contact, delivery rules, content and catalog. A built-in check shows a readable error if the config has a mistake.
-
-## Tech
-
-Plain HTML, CSS and JavaScript. No build step, no framework, no server, no tracking, no external requests (fonts are bundled). State is in `localStorage`. Tested with Node's built-in test runner and a real Chrome click-through (Puppeteer).
-
-```
-docs/                 the site (served by GitHub Pages)
-  lebs.config.js      <- the one file you edit per client
-  examples/           second demo brand (open with ?demo=noor)
-  js/lib.js           pure logic: filters, cart, WhatsApp message, routing, config check
-  js/app.js           UI
-  js/art.js           garment drawings used when there are no photos
-  js/i18n.js          interface strings, Arabic and English
-tests/                unit tests + browser click-through
+```sh
+python3 -m http.server 8080 --bind 127.0.0.1
 ```
 
-The browser click-through (67 checks: filters, bag, stock limits, WhatsApp links in both languages, reservation flow, RTL, accessibility, corrupted storage) was run against the live URL as well as locally. Screenshots in this README come from the live site, made by `tests/screenshots.mjs` with sample data.
+Open `http://localhost:8080/`. Use a fresh browser profile. The sample shop is **demo content**: fictional products and prices, a Demo banner, a Demo tag on every product and labelled placeholder images. No WhatsApp number is set, so the order screen offers **Copy order** only. Screenshots in `docs/` use this demo data.
 
-Run it locally: `node tests/serve.js` then open http://localhost:8080/ (or open `docs/index.html` directly).
-Run the tests: `npm install` then `npm test` (unit) and `npm run e2e` (needs Google Chrome; set `CHROME=/path/to/chrome` if it is not at `/usr/bin/google-chrome`). `BASE_URL=https://... npm run e2e` runs the same click-through against a deployed copy.
+## Set up a shop
 
-`node tests/offline.mjs <url>` checks the service worker, manifest and icons, and that the store renders with the network off.
+1. Open **Owner** (`#/edit`). Set the shop name, currency and public WhatsApp number. Add categories and products. For each product list sizes and colours (comma separated) and tick any out-of-stock combinations.
+2. Fill the **size guide** with your own measurements. The sample rows are demo placeholders with no measurements.
+3. Press **Clear demo products**, then **Export catalog-data.js**, replace the file in the repository, commit and publish. Owner edits are a local draft until you publish.
+4. Use the **QR** tab to print a shop QR code.
 
-## Rebranding for a client
+Static theming: edit `assets/kit-theme.js` (`name`, `logo`, `accent`, `mode`, `light`, `dark`). Keep `assets/yk-logo.svg` and `assets/favicon.svg` for the developer credit. The shared storefront engine (`shop-core.js`, `shop-ui.js`) is the same across the talab, mahal and lebs kits.
 
-1. **Copy the repo** (fork it, or download the ZIP) for the client.
-2. **Open `docs/lebs.config.js`** and change, top to bottom:
-   - `brand`: name and tagline in both languages, `logo` (a square SVG or PNG in `docs/assets/`), `favicon`.
-   - `theme`: five colors (`paper`, `card`, `ink`, `accent`, `accent2`, `line`). Text on buttons picks black or white by itself.
-   - `whatsapp.number`: the client's number with country code, digits only. **The demo number is fake, replace it first.** `defaultCountryCode` is added when a customer types a number that starts with 0.
-   - `currency`, `delivery` (fee, free-over amount, note), `reservationHoldHours`, `newArrivalsDays`.
-   - `hero`, `about`, `contact`, `perks`: the words on the pages, in both languages.
-   - `categories` and `palette` (color names and hex).
-   - `products`: one entry each. Example:
-     ```js
-     { id: 'linen-overshirt', category: 'tops', price: 890, added: '2026-11-20',
-       name: { en: 'Linen overshirt', ar: 'قميص كتان واسع' },
-       desc: { en: 'Washed linen, relaxed cut.', ar: 'كتان مغسول بقصة مريحة.' },
-       colors: ['sand', 'sage'],
-       sizes: { S: 4, M: 6, L: 3, XL: 0 },          // pieces in stock, 0 = sold out
-       images: { sand: ['photos/linen-sand-1.jpg', 'photos/linen-sand-2.jpg'],
-                 sage: ['photos/linen-sage-1.jpg'] } // optional, or a plain list
-     }
-     ```
-3. **Add photos** (optional): put files in `docs/photos/` and list them under `images`. Without `images`, set `art` to one of `tee shirt hoodie dress abaya trousers skirt jacket scarf`.
-4. **Check it**: open the page. If something in the config is wrong the page lists exactly what. `npm test` also validates the demo configs.
-5. **Publish**: any static host works (GitHub Pages from `/docs`, Netlify, Cloudflare Pages, a shared hosting folder). The second demo (`docs/examples/noor.config.js`, opened with `?demo=noor`) shows a full rebrand: other name, colors, currency, default language and catalog. For a client site you can delete `docs/examples/` and the `?demo=` lines in `docs/index.html`.
+## Deploy (GitHub Pages)
 
-To update stock or add arrivals later, edit the config and upload it again. Dates use `added: 'YYYY-MM-DD'`. The demo config uses a `daysAgo()` helper only so its demo arrivals never go stale.
+Create the repository `yousefkhames/lebs`, commit these files to `main`, then Settings → Pages → Deploy from a branch → `main` / root. Live at `https://yousefkhames.github.io/lebs/`. All paths are relative.
 
-## Honest limits
+## Tests
 
-- The store works offline after the first visit (service worker, manifest and icons are included). If you change files, bump `VERSION` in `docs/sw.js` so returning visitors get the update. Product photos you add are cached as they are viewed, not all up front. Sending an order still needs a connection because it opens WhatsApp.
-- **It is a static demo store, not a full e-commerce platform.** There is no server, no database, no payment processing and no admin screen. The owner edits `lebs.config.js`.
-- **Data is per browser.** The bag, saved pieces and order history live in that visitor's `localStorage`. They do not sync across devices, and clearing browser data removes them. The store owner does not see them: the owner's copy of an order is the WhatsApp message.
-- **Stock is not live.** Stock numbers come from the config and are not reduced when someone orders. The owner confirms availability in the WhatsApp chat.
-- **Orders depend on WhatsApp.** The customer must press send in WhatsApp. If WhatsApp is not installed the link opens WhatsApp Web.
-- **The demo catalog uses drawn garments, not photographs**, and the store, products and WhatsApp number are made up. Real photos are supported through `images`.
-- **GitHub Pages is a demo host.** Pages is fine for a demo, but for a paying client use a host with the terms and uptime they need (GitHub Pages is not meant for running a commercial business).
-- Cross-browser testing so far is Chrome (desktop and a phone-size viewport). It uses standard features, but Safari and Firefox were not click-tested.
-- Search is simple word matching, with no typo tolerance. Arabic search matches the exact words in the config (no diacritics or root handling).
+```sh
+npm run test:unit  # Node 22+, no install
+npm run test:e2e   # headless Chrome as google-chrome
+npm test
+```
+
+## Honest limits and privacy
+
+- Opening a WhatsApp draft is not sending. The customer presses send, and the order is not confirmed until the shop replies. The app records no orders.
+- Totals use the shop prices in the catalog. There is no shipping, tax, discount code or payment; the shop confirms the final price.
+- Stock is a manual flag per size and colour combination. Customers see it as of your last publish.
+- Saved items live in the visitor's own browser.
+- Photos are resized in the browser and embedded in the exported file; relative paths such as `img/shirt.jpg` also work.
+- Static and device-local: the owner draft does not sync between devices. Clearing site data erases it, so export first.
+- No customer data is collected or stored; the optional name and note go only into the WhatsApp message the customer sends.
+- Contrast of the default theme pairs is checked; no blanket WCAG claim.
 
 ## License
 
-MIT. See [LICENSE](LICENSE). Bundled fonts are under the SIL Open Font License (see `docs/fonts/LICENSES.txt`).
+MIT, copyright Yousef Khames. See `LICENSE`. Cairo font: SIL OFL. `assets/qrcode.js`: qrcode-generator by Kazuhiko Arase (MIT, `assets/qrcode.LICENSE.txt`).
